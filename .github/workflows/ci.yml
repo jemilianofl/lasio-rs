@@ -42,4 +42,4 @@ jobs:
       - name: Build and Install Wheel
         run: maturin develop --release
       - name: Run Python Tests
-        run: python tests/test_09.py
+        run: python tests/test_basic.py

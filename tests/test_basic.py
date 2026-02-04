@@ -6,7 +6,7 @@ print("=" * 60)
 print("LAS_read_rs Comprehensive Test with 09.las")
 print("=" * 60)
 
-filename = "09.las"
+filename = "sample.las"
 if not os.path.exists(filename):
     print(f"Error: {filename} not found")
     exit(1)
@@ -48,17 +48,17 @@ except Exception as e:
 # 5. Export to CSV
 print("\n5. Exporting to CSV...")
 try:
-    las.to_csv("output_09.csv")
-    print(f"   Saved: output_09.csv ({os.path.getsize('output_09.csv') / 1024:.1f} KB)")
+    las.to_csv("output_sample.csv")
+    print(f"   Saved: output_sample.csv ({os.path.getsize('output_sample.csv') / 1024:.1f} KB)")
 except Exception as e:
     print(f"   Error: {e}")
 
 # 6. Export to LAS 2.0
 print("\n6. Exporting to LAS 2.0...")
 try:
-    las.to_las("output_09_v2.las", version="2.0")
+    las.to_las("output_sample_v2.las", version="2.0")
     print(
-        f"   Saved: output_09_v2.las ({os.path.getsize('output_09_v2.las') / 1024:.1f} KB)"
+        f"   Saved: output_sample_v2.las ({os.path.getsize('output_sample_v2.las') / 1024:.1f} KB)"
     )
 except Exception as e:
     print(f"   Error: {e}")
@@ -66,9 +66,9 @@ except Exception as e:
 # 7. Export to LAS 3.0
 print("\n7. Exporting to LAS 3.0...")
 try:
-    las.to_las("output_09_v3.las", version="3.0")
+    las.to_las("output_sample_v3.las", version="3.0")
     print(
-        f"   Saved: output_09_v3.las ({os.path.getsize('output_09_v3.las') / 1024:.1f} KB)"
+        f"   Saved: output_sample_v3.las ({os.path.getsize('output_sample_v3.las') / 1024:.1f} KB)"
     )
 except Exception as e:
     print(f"   Error: {e}")
@@ -76,9 +76,9 @@ except Exception as e:
 # 8. Export to Excel
 print("\n8. Exporting to Excel...")
 try:
-    las.to_excel("output_09.xlsx")
+    las.to_excel("output_sample.xlsx")
     print(
-        f"   Saved: output_09.xlsx ({os.path.getsize('output_09.xlsx') / 1024:.1f} KB)"
+        f"   Saved: output_sample.xlsx ({os.path.getsize('output_sample.xlsx') / 1024:.1f} KB)"
     )
 except Exception as e:
     print(f"   Error: {e}")
