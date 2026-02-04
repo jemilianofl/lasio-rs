@@ -16,6 +16,10 @@ Benchmarked with a **92 MB** LAS file (400 curves, 21,842 points each):
 
 ## 🚀 Installation
 
+**Requirements:**
+- Python 3.8 or higher
+- Supported OS: Windows, macOS, Linux
+
 ```bash
 pip install las_read_rs
 ```
