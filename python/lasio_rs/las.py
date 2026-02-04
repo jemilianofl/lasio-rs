@@ -103,6 +103,44 @@ class LASFile:
     def keys(self):
         return self.curves.keys()
 
+    def to_df(self):
+        """Convert LAS data to a pandas DataFrame.
+
+        Returns:
+            pandas.DataFrame: DataFrame with curve mnemonics as columns.
+        """
+        try:
+            import pandas as pd
+        except ImportError:
+            raise ImportError(
+                "pandas is required for to_df(). Install with: pip install pandas"
+            )
+
+        data = {}
+        for mnemonic in self.curves.keys():
+            curve = self.curves[mnemonic]
+            data[mnemonic] = curve.data
+        return pd.DataFrame(data)
+
+    def to_polars(self):
+        """Convert LAS data to a polars DataFrame.
+
+        Returns:
+            polars.DataFrame: DataFrame with curve mnemonics as columns.
+        """
+        try:
+            import polars as pl
+        except ImportError:
+            raise ImportError(
+                "polars is required for to_polars(). Install with: pip install polars"
+            )
+
+        data = {}
+        for mnemonic in self.curves.keys():
+            curve = self.curves[mnemonic]
+            data[mnemonic] = curve.data
+        return pl.DataFrame(data)
+
 
 def read(file_path):
     rust_obj = _rust_read(str(file_path))
