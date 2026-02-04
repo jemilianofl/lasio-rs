@@ -1,0 +1,17 @@
+lasio
+
+
+# Added by cargo
+
+/target
+/lasio
+/tests/lasio
+/__pycache__
+/*.las
+!sample.las
+.venv
+*.whl
+*.egg-info
+.idea
+.vscode
+*.pyc
