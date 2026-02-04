@@ -1,70 +1,152 @@
-# LAS_read_rs
+# las_read_rs 🦀
 
-**LAS_read_rs** is a high-performance Python library for reading **LAS (Log ASCII Standard)** files, written in **Rust** using `pyo3` and `nom`. It is designed to be a faster alternative to pure Python implementations, capable of parsing large geophysical log files efficiently.
+[![PyPI version](https://badge.fury.io/py/las-read-rs.svg)](https://pypi.org/project/las-read-rs/)
+[![CI](https://github.com/jemilianofl/lasio-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/jemilianofl/lasio-rs/actions)
 
-## Features
+**High-performance LAS (Log ASCII Standard) file reader written in Rust** with Python bindings. A faster alternative to pure Python implementations, capable of parsing large geophysical log files efficiently.
 
-- 🚀 **High Performance**: Built with Rust's `nom` parser combinators and parallelized with `rayon` for maximum speed.
-- 🧵 **Multi-threaded**: parses the data section (`~ASCII`) in parallel chunks.
-- 📦 **Easy Installation**: Distributed as a standard Python wheel via PyPI.
-- 🐍 **Pythonic Interface**: Simple `read()` function returning a `LASFile` object.
-- ✅ **Standard Compliant**: Supports LAS 2.0 (and 1.2 compatible structure).
+## ⚡ Performance
 
-## Benchmarks
+Benchmarked with a **92 MB** LAS file (400 curves, 21,842 points each):
 
-Parsed a LAS file with **100,000 lines** of data:
-- **LAS_read_rs**: ~0.8s (Pure parsing time) / ~3.8s (Including CLI overhead benchmarks)
-- **Pure Python**: Significantly slower (typically 10x-50x slower depending on implementation).
+| Library | Read Time | Speedup |
+|---------|-----------|---------|
+| **las_read_rs** (Rust) | ~1.0s | **9x faster** 🚀 |
+| lasio (Python) | ~9.0s | baseline |
 
-## Installation
+## 🚀 Installation
 
 ```bash
-pip install LAS_read_rs
+pip install las_read_rs
 ```
 
-## Usage
+**Optional dependencies for export features:**
+```bash
+pip install pandas          # For DataFrame and CSV export
+pip install openpyxl        # For Excel export
+pip install polars          # For Polars DataFrame
+```
+
+## 📖 Quick Start
 
 ```python
 import lasio_rs
 
 # Read a LAS file
-las = lasio_rs.read("path/to/well_log.las")
+las = lasio_rs.read("well_log.las")
 
-# Access Version Information
-print(las.version)
-# Output (JSON representation):
-# {
-#   "VERS": {"mnemonic": "VERS", "value": "2.0", "descr": "CWLS LOG ASCII STANDARD - VERSION 2.0"},
-#   "WRAP": {"mnemonic": "WRAP", "value": "NO", "descr": "One line per depth step"}
-# }
+# Access metadata
+print(las.version['VERS'].value)  # "2.0"
+print(las.well['WELL'].value)     # Well name
 
-# Access Well Metadata (e.g., STRT, STOP, NULL)
-# Note: Currently exposed mainly via debug getters or verifying structure
-# Future versions will expose a full dictionary-like interface.
+# Access curve data directly
+depth = las['DEPT']  # Returns list of floats
+gr = las['GR']       # Gamma Ray values
 
-print(f"Well Name: {las.well_name}")
+# List all curves
+for curve_name in las.keys():
+    curve = las.curves[curve_name]
+    print(f"{curve_name} ({curve.unit}): {len(curve.data)} points")
 ```
 
-## Structure
+## 📊 DataFrame Conversion
 
-The library maps LAS sections to Rust structs:
-- `~Version` -> `las.version`
-- `~Well` -> `las.well`
-- `~Curves` -> `las.curves` (Metadata)
-- `~ASCII` -> Data columns (Stored internally as efficient vectors)
+```python
+# Convert to pandas DataFrame
+df = las.to_df()
+print(df.head())
 
-## Building from Source
+# Convert to polars DataFrame
+df_polars = las.to_polars()
+```
+
+## 💾 Export Formats
+
+### CSV Export
+```python
+las.to_csv("output.csv")
+```
+
+### Excel Export
+```python
+las.to_excel("output.xlsx", sheet_name="Well Data")
+```
+
+### LAS Export (2.0 and 3.0)
+```python
+# Export as LAS 2.0
+las.to_las("output_v2.las", version="2.0")
+
+# Export as LAS 3.0
+las.to_las("output_v3.las", version="3.0")
+```
+
+## 🔧 API Reference
+
+### `lasio_rs.read(path)`
+Reads a LAS file and returns a `LASFile` object.
+
+### `LASFile` Properties
+| Property | Description |
+|----------|-------------|
+| `version` | Version section (VERS, WRAP) |
+| `well` | Well information (STRT, STOP, STEP, NULL, WELL, etc.) |
+| `curves` | Curve metadata and data |
+| `params` | Parameter section |
+
+### `LASFile` Methods
+| Method | Description |
+|--------|-------------|
+| `las[mnemonic]` | Get curve data as list |
+| `las.keys()` | List curve mnemonics |
+| `las.to_df()` | Convert to pandas DataFrame |
+| `las.to_polars()` | Convert to polars DataFrame |
+| `las.to_csv(path)` | Export to CSV |
+| `las.to_excel(path)` | Export to Excel |
+| `las.to_las(path, version)` | Export to LAS format |
+
+## 🏗️ Building from Source
 
 Requirements:
 - Python 3.7+
 - Rust (cargo, rustc)
-- `maturin`
+- maturin
 
 ```bash
+git clone https://github.com/jemilianofl/lasio-rs.git
+cd lasio-rs
 pip install maturin
 maturin develop --release
 ```
 
-## License
+## 📋 Supported LAS Versions
+
+- ✅ LAS 2.0
+- ✅ LAS 3.0 (read support)
+- ✅ Export to LAS 2.0/3.0
+
+## 🤝 Compatibility with lasio
+
+`las_read_rs` provides a similar API to the popular `lasio` library:
+
+```python
+# lasio style
+import lasio
+las = lasio.read("file.las")
+depth = las['DEPT']
+
+# las_read_rs style (same!)
+import lasio_rs
+las = lasio_rs.read("file.las")
+depth = las['DEPT']
+```
+
+## 📄 License
 
 MIT
+
+## 🙏 Acknowledgments
+
+- Built with [PyO3](https://pyo3.rs/) for Python bindings
+- Uses [nom](https://github.com/Geal/nom) for parsing
+- Inspired by [lasio](https://github.com/kinverarity1/lasio)
