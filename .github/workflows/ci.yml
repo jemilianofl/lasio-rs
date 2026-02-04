@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,6 +40,8 @@ jobs:
           pip install maturin
           pip install pandas polars openpyxl
       - name: Build and Install Wheel
-        run: maturin develop --release
+        run: |
+          maturin build --release --out dist
+          pip install dist/*.whl --force-reinstall
       - name: Run Python Tests
         run: python tests/test_basic.py
