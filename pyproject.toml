@@ -8,11 +8,11 @@ crate-type = ["cdylib", "rlib"]
 
 [project]
 name = "las_read_rs"
-version = "0.1.5"
+version = "0.1.6"
 description = "A high-performance LAS (Log ASCII Standard) file reader written in Rust"
 authors = [{name = "Emiliano Flores", email = "jemilianofl@github.com"}]
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 
 [tool.maturin]
 python-source = "python"
