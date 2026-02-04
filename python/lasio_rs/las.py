@@ -1,6 +1,14 @@
 from ._lasio_rs import read as _rust_read
 import json
 
+try:
+    from ._lasio_rs import read as _rust_read
+except ImportError as e:
+    # Esto da un error mucho más claro al usuario
+    raise ImportError(
+        "No se pudo cargar el binario de Rust (_lasio_rs). "
+        "Asegúrate de haber instalado el paquete correctamente para tu plataforma."
+    ) from e
 
 class SectionItems:
     def __init__(self, data_dict):

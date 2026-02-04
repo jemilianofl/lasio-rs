@@ -1,1 +1,1 @@
-from .las import read, LASFile
+from .las import *

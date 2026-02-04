@@ -1,32 +1,75 @@
 name: Publish to PyPI
 
 on:
-    push:
-        tags:
-            - "v*"
-    workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
 
 permissions:
-    contents: read
-    id-token: write # MAndatory for OIDC
+  contents: read
+  id-token: write
 
 jobs:
-    release:
-        name: Release
-        runs-on: ubuntu-latest
-        environment: pypi
-        steps:
-            - uses: actions/checkout@v4
+  # --- JOB 1: Compilar Wheels para múltiples SO ---
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # Esto generará binarios para Linux, Windows y macOS
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' # Versión base para maturin
 
-            - name: Build wheels
-              uses: PyO3/maturin-action@v1
-              with:
-                  command: build
-                  args: --release --out dist --find-interpreter
-                  manylinux: auto
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          command: build
+          args: --release --out dist --find-interpreter
+          manylinux: auto
 
-            - name: Publish to PyPI
-              uses: pypa/gh-action-pypi-publish@release/v1
-              with:
-                  packages-dir: dist/
-                  attestations: false
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}
+          path: dist
+
+  # --- JOB 2: Crear el código fuente (sdist) ---
+  build_sdist:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build sdist
+        uses: PyO3/maturin-action@v1
+        with:
+          command: sdist
+          args: --out dist
+      - name: Upload sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-sdist
+          path: dist
+
+  # --- JOB 3: Publicar todo en PyPI ---
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    environment: pypi
+    needs: [build_wheels, build_sdist] # Espera a que los otros terminen
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: wheels-*
+          merge-multiple: true
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/

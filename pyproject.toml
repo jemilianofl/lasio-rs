@@ -2,18 +2,23 @@
 requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
-[lib]
-name = "_lasio_rs"
-crate-type = ["cdylib", "rlib"]
-
 [project]
-name = "las_read_rs"
+# Este debe ser exactamente el nombre en PyPI
+name = "las-read-rs" 
 version = "0.1.6"
 description = "A high-performance LAS (Log ASCII Standard) file reader written in Rust"
 authors = [{name = "Emiliano Flores", email = "jemilianofl@github.com"}]
 readme = "README.md"
 requires-python = ">=3.8"
+dependencies = [
+    "pandas",    # Opcionales pero recomendadas si usas to_df()
+    "numpy",
+]
 
 [tool.maturin]
+# Esto le dice a maturin donde está tu código de Python
 python-source = "python"
+# IMPORTANTE: Esto debe coincidir con el nombre de tu modulo en Rust (Cargo.toml)
 module-name = "lasio_rs._lasio_rs"
+# Habilita compatibilidad universal para no subir un archivo por cada versión de Python
+features = ["pyo3/abi3-py38"]
