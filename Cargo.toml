@@ -1,6 +1,6 @@
 [package]
-name = "las_read_rs" # Sugiero que coincida con el nombre en PyPI para evitar confusiones
-version = "0.1.6"    # Sube la versión para el próximo release
+name = "_lasio_rs" # Sugiero que coincida con el nombre en PyPI para evitar confusiones
+version = "0.1.7"    # Sube la versión para el próximo release
 edition = "2021"
 
 [lib]

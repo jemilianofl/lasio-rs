@@ -5,7 +5,7 @@ build-backend = "maturin"
 [project]
 # Este debe ser exactamente el nombre en PyPI
 name = "las-read-rs" 
-version = "0.1.6"
+version = "0.1.7"
 description = "A high-performance LAS (Log ASCII Standard) file reader written in Rust"
 authors = [{name = "Emiliano Flores", email = "jemilianofl@github.com"}]
 readme = "README.md"

@@ -3,6 +3,23 @@
 version = 4
 
 [[package]]
+name = "_lasio_rs"
+version = "0.1.7"
+dependencies = [
+ "codepage",
+ "encoding_rs",
+ "indexmap",
+ "log",
+ "ndarray",
+ "nom",
+ "pyo3",
+ "rayon",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -113,23 +130,6 @@ name = "itoa"
 version = "1.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "92ecc6618181def0457392ccd0ee51198e065e016d1d527a7ac1b6dc7c1f09d2"
-
-[[package]]
-name = "las_read_rs"
-version = "0.1.6"
-dependencies = [
- "codepage",
- "encoding_rs",
- "indexmap",
- "log",
- "ndarray",
- "nom",
- "pyo3",
- "rayon",
- "serde",
- "serde_json",
- "thiserror",
-]
 
 [[package]]
 name = "libc"
