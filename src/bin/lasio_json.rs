@@ -1,4 +1,4 @@
-use _lasio_rs::reader::parse_las_from_reader;
+use las_read_rs::reader::parse_las_from_reader;
 use std::env;
 use std::fs::File;
 use std::io::BufReader;

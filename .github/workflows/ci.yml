@@ -41,7 +41,7 @@ jobs:
           pip install pandas polars openpyxl
       - name: Build and Install Wheel
         run: |
-          maturin build --release --out dist
+          maturin build --release --out dist --interpreter python3
           pip install dist/*.whl --force-reinstall
       - name: Run Python Tests
         run: python tests/test_basic.py
