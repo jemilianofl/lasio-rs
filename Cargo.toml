@@ -4,7 +4,7 @@ version = "0.1.6"    # Sube la versión para el próximo release
 edition = "2021"
 
 [lib]
-name = "las_read_rs" # El nombre de la librería que importará Python
+name = "_lasio_rs" # El nombre de la librería que importará Python
 crate-type = ["cdylib"] # rlib no suele ser necesario para extensiones de Python
 
 [dependencies]
