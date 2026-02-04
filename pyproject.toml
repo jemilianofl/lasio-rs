@@ -8,7 +8,7 @@ crate-type = ["cdylib", "rlib"]
 
 [project]
 name = "las_read_rs"
-version = "0.1.1"
+version = "0.1.4"
 description = "A high-performance LAS (Log ASCII Standard) file reader written in Rust"
 authors = [{name = "Emiliano Flores", email = "jemilianofl@github.com"}]
 readme = "README.md"
