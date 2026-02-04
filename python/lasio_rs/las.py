@@ -141,6 +141,86 @@ class LASFile:
             data[mnemonic] = curve.data
         return pl.DataFrame(data)
 
+    def to_csv(self, path, **kwargs):
+        """Export LAS data to CSV file.
+
+        Args:
+            path: Output file path.
+            **kwargs: Additional arguments passed to pandas.DataFrame.to_csv()
+        """
+        df = self.to_df()
+        df.to_csv(path, index=False, **kwargs)
+
+    def to_excel(self, path, sheet_name="Data", **kwargs):
+        """Export LAS data to Excel file.
+
+        Args:
+            path: Output file path.
+            sheet_name: Name of the Excel sheet.
+            **kwargs: Additional arguments passed to pandas.DataFrame.to_excel()
+
+        Note: Requires openpyxl. Install with: pip install openpyxl
+        """
+        df = self.to_df()
+        df.to_excel(path, sheet_name=sheet_name, index=False, **kwargs)
+
+    def to_las(self, path, version="2.0"):
+        """Export LAS data to LAS file format.
+
+        Args:
+            path: Output file path.
+            version: LAS version ("2.0" or "3.0"). Default is "2.0".
+        """
+        with open(path, "w") as f:
+            # Version Section
+            f.write("~Version Information\n")
+            f.write(
+                f" VERS.                  {version} : CWLS LOG ASCII STANDARD - VERSION {version}\n"
+            )
+            f.write(" WRAP.                  NO  : One line per depth step\n")
+
+            # Well Section
+            f.write("~Well Information\n")
+            for mnem in self.well.keys():
+                item = self.well[mnem]
+                f.write(
+                    f" {mnem:18s}.{item.unit or '':8s} {item.value or '':30s}: {item.descr or ''}\n"
+                )
+
+            # Curve Section
+            f.write("~Curve Information\n")
+            for mnem in self.curves.keys():
+                curve = self.curves[mnem]
+                f.write(
+                    f" {mnem:18s}.{curve.unit or '':8s}                              : {curve.descr or ''}\n"
+                )
+
+            # Parameter Section (if exists)
+            if len(list(self.params.keys())) > 0:
+                f.write("~Parameter Information\n")
+                for mnem in self.params.keys():
+                    item = self.params[mnem]
+                    f.write(
+                        f" {mnem:18s}.{item.unit or '':8s} {item.value or '':30s}: {item.descr or ''}\n"
+                    )
+
+            # ASCII Data Section
+            f.write("~A")
+            for mnem in self.curves.keys():
+                f.write(f" {mnem}")
+            f.write("\n")
+
+            # Get data length from first curve
+            first_curve = self.curves[list(self.curves.keys())[0]]
+            nrows = len(first_curve.data)
+
+            for i in range(nrows):
+                row = []
+                for mnem in self.curves.keys():
+                    val = self.curves[mnem].data[i]
+                    row.append(f"{val:12.6f}")
+                f.write(" ".join(row) + "\n")
+
 
 def read(file_path):
     rust_obj = _rust_read(str(file_path))
