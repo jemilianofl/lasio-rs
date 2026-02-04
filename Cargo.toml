@@ -1,10 +1,10 @@
 [package]
-name = "lasio_rs"
+name = "_lasio_rs"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "lasio_rs"
+name = "_lasio_rs"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]

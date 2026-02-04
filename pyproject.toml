@@ -2,6 +2,10 @@
 requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
+[lib]
+name = "_lasio_rs"
+crate-type = ["cdylib", "rlib"]
+
 [project]
 name = "LAS_read_rs"
 version = "0.1.0"
@@ -9,8 +13,7 @@ description = "A high-performance LAS (Log ASCII Standard) file reader written i
 authors = [{name = "Emiliano Flores", email = "jemilianofl@github.com"}]
 readme = "README.md"
 requires-python = ">=3.7"
-classifiers = [
-    "Programming Language :: Rust",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
-]
+
+[tool.maturin]
+python-source = "python"
+module-name = "lasio_rs._lasio_rs"

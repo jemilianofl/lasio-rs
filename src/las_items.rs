@@ -25,8 +25,7 @@ pub struct CurveItem {
     pub unit: String,
     pub value: String, // API code or similar metadata
     pub descr: String,
-    #[serde(skip)] // Don't serialize massive data array by default? Or maybe we want to. Python's json does.
-    // For now, let's keep it simple. Arrays might be large.
+    #[serde(skip_serializing)] 
     pub data: Vec<f64>, 
 }
 
