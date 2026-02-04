@@ -1,5 +1,5 @@
 use crate::reader::parse_las_from_reader;
-use crate::{LASFile, HeaderItem, CurveItem};
+use crate::LASFile;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 use std::fs::File;

@@ -41,7 +41,7 @@ fn parse_line_header(input: &str) -> IResult<&str, HeaderItem> {
     
     let (input, value_str) = take_while(|c| c != ':')(input)?;
     
-    let (input, descr) = if input.starts_with(':') {
+    let (_input, descr) = if input.starts_with(':') {
         preceded(char(':'), rest)(input)?
     } else {
         (input, "")
@@ -53,13 +53,13 @@ fn parse_line_header(input: &str) -> IResult<&str, HeaderItem> {
 
 fn parse_section_title(input: &str) -> IResult<&str, String> {
     let (input, _) = tag("~")(input)?;
-    let (input, title) = rest(input)?;
+    let (_input, title) = rest(input)?;
     Ok(("", title.trim().to_string()))
 }
 
 fn parse_comment(input: &str) -> IResult<&str, ()> {
     let (input, _) = char('#')(input)?;
-    let (input, _) = rest(input)?;
+    let (_input, _) = rest(input)?;
     Ok(("", ()))
 }
 
