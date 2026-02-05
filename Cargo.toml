@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 name = "_lasio_rs" # El nombre de la librería que importará Python
-crate-type = ["cdylib"] # rlib no suele ser necesario para extensiones de Python
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 # Actualizado a 0.20 para mejor soporte de Python 3.12+
